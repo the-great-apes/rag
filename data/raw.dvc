@@ -1,0 +1,13 @@
+md5: 56bc8b95b9183b1cbc7b9f03a91c034b
+frozen: true
+deps:
+- path: Data
+  repo:
+    url: https://github.com/swisshacks/msunique
+    rev_lock: 2391301b16936aadb5af0a2751988ba620440338
+outs:
+- md5: 8f98f72328a8b55e32ce6bd12b678036.dir
+  size: 815155223
+  nfiles: 38
+  hash: md5
+  path: raw
