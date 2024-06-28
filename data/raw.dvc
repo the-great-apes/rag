@@ -1,0 +1,13 @@
+md5: d03f10cfc9459f42e448c54ad27202e5
+frozen: true
+deps:
+- path: Data
+  repo:
+    url: https://github.com/the-great-apes/msunique/
+    rev_lock: 41976a0031f3168bc0a295efb37fb1fe5b60295f
+outs:
+- md5: 8f98f72328a8b55e32ce6bd12b678036.dir
+  size: 815155223
+  nfiles: 38
+  hash: md5
+  path: raw
