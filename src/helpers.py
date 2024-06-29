@@ -33,6 +33,47 @@ class Report(BaseModel):
             return Report.model_validate_json(f.read())
 
 
+class KPI(BaseModel):
+    """Data model for a KPI."""
+
+    name: str
+    value: float
+    currency: str
+    context: str
+
+
+class RevDriver(BaseModel):
+    """Data model for revenue drivers."""
+
+    content: str
+    context: list[str]
+
+
+class Summary(BaseModel):
+    """Data model for a Summary."""
+
+    company: str
+    year: int
+    rev_driver: RevDriver
+    kpis: list[KPI]
+
+    def save(self, dir_path: Path) -> None:
+        dir_path.mkdir(parents=True, exist_ok=True)
+        with open(dir_path / f"{self.year}_{self.company}.json", "w") as f:
+            f.write(self.model_dump_json())
+
+    @classmethod
+    def load(cls, file_path: Path) -> "Summary":
+        """
+        Parse JSON Object into Summary.
+
+        :param file_path: The path to a json summary.
+        :return: Summary object.
+        """
+        with open(file_path, "r") as f:
+            return Summary.model_validate_json(f.read())
+
+
 ########################################################################################
 # helper funcs
 ########################################################################################

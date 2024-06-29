@@ -104,3 +104,27 @@ stages:
       md5: 2f6f6375ec3e561f173e4294f9bdb893.dir
       size: 244703688
       nfiles: 75
+  exrtact:
+    cmd: python -m src.extract
+    deps:
+    - path: data/index/
+      hash: md5
+      md5: 2f6f6375ec3e561f173e4294f9bdb893.dir
+      size: 244703688
+      nfiles: 75
+    - path: src/extract.py
+      hash: md5
+      md5: a7535cb8a07a95a080cc907cfdf121bb
+      size: 4300
+    params:
+      params.yaml:
+        data.index: data/index/
+        data.summary: data/summary/
+        kpis:
+        - revenue
+    outs:
+    - path: data/summary/
+      hash: md5
+      md5: ad249594ee152cebeca14c919ca6e589.dir
+      size: 104659
+      nfiles: 15

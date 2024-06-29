@@ -42,3 +42,15 @@ stages:
       - ${data.chunk}
     outs:
       - ${data.index}
+
+  exrtact:
+    cmd: python -m src.extract
+    params:
+      - data.index
+      - data.summary
+      - kpis
+    deps:
+      - src/extract.py
+      - ${data.index}
+    outs:
+      - ${data.summary}

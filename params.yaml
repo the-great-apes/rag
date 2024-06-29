@@ -4,6 +4,7 @@ data:
   clean: "data/clean/"
   chunk: "data/chunk/"
   index: "data/index/"
+  summary: "data/summary/"
 
 chunking:
   buffer_size: 1
@@ -23,3 +24,6 @@ models:
     api_key: "fccb3566bca141ab9fbf95e8d7ae3a70"
     azure_endpoint: "https://hackathonregionwestus.openai.azure.com/"
     api_version: "2024-02-01"
+
+kpis:
+  - "revenue"
