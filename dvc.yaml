@@ -32,3 +32,13 @@ stages:
     outs:
       - ${data.chunk}
 
+  index:
+    cmd: python -m src.index
+    params:
+      - data.chunk
+      - data.index
+    deps:
+      - src/chunk.py
+      - ${data.chunk}
+    outs:
+      - ${data.index}
