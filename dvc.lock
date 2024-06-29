@@ -1,0 +1,106 @@
+schema: '2.0'
+stages:
+  parse:
+    cmd: python -m src.parse
+    deps:
+    - path: data/raw/
+      hash: md5
+      md5: 8f98f72328a8b55e32ce6bd12b678036.dir
+      size: 815155223
+      nfiles: 38
+    - path: src/helpers.py
+      hash: md5
+      md5: 8c134c7850f5187ec20ad3ef69ecf4f3
+      size: 1459
+    - path: src/parse.py
+      hash: md5
+      md5: 8e242c871587348c1b953c8fe18a77f8
+      size: 1387
+    params:
+      params.yaml:
+        data.parsed: data/parsed/
+        data.raw: data/raw/
+    outs:
+    - path: data/parsed/
+      hash: md5
+      md5: 9f2cce5c1c77c56a82b02e1fbc70e6cc.dir
+      size: 8361445
+      nfiles: 15
+  clean:
+    cmd: python -m src.clean
+    deps:
+    - path: data/parsed/
+      hash: md5
+      md5: 9f2cce5c1c77c56a82b02e1fbc70e6cc.dir
+      size: 8361445
+      nfiles: 15
+    - path: src/clean.py
+      hash: md5
+      md5: ca662ded2dbd85890e3d7407fa72c3c4
+      size: 1581
+    - path: src/helpers.py
+      hash: md5
+      md5: 8c134c7850f5187ec20ad3ef69ecf4f3
+      size: 1459
+    params:
+      params.yaml:
+        data.clean: data/clean/
+        data.parsed: data/parsed/
+    outs:
+    - path: data/clean/
+      hash: md5
+      md5: 9dc4554dd30b494d9ffb1a9311ed4edc.dir
+      size: 7860116
+      nfiles: 15
+  chunk:
+    cmd: python -m src.chunk
+    deps:
+    - path: data/clean/
+      hash: md5
+      md5: 9dc4554dd30b494d9ffb1a9311ed4edc.dir
+      size: 7860116
+      nfiles: 15
+    - path: src/chunk.py
+      hash: md5
+      md5: be0e8eded6fee8f56ac3c6738eaad349
+      size: 2286
+    - path: src/helpers.py
+      hash: md5
+      md5: 8c134c7850f5187ec20ad3ef69ecf4f3
+      size: 1459
+    params:
+      params.yaml:
+        data.chunk: data/chunk/
+        data.clean: data/clean/
+    outs:
+    - path: data/chunk/
+      hash: md5
+      md5: 001a984a995c873b2f700bc516f06332.dir
+      size: 15771211
+      nfiles: 15
+  index:
+    cmd: python -m src.index
+    deps:
+    - path: data/chunk/
+      hash: md5
+      md5: 001a984a995c873b2f700bc516f06332.dir
+      size: 15771211
+      nfiles: 15
+    - path: src/chunk.py
+      hash: md5
+      md5: be0e8eded6fee8f56ac3c6738eaad349
+      size: 2286
+    - path: src/helpers.py
+      hash: md5
+      md5: 8c134c7850f5187ec20ad3ef69ecf4f3
+      size: 1459
+    params:
+      params.yaml:
+        data.chunk: data/chunk/
+        data.index: data/index/
+    outs:
+    - path: data/index/
+      hash: md5
+      md5: 2f6f6375ec3e561f173e4294f9bdb893.dir
+      size: 244703688
+      nfiles: 75
