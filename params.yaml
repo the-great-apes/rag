@@ -1,3 +1,4 @@
 data:
   raw: "data/raw/"
   parsed: "data/parsed/"
+  clean: "data/clean/"
