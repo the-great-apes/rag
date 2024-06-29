@@ -48,7 +48,7 @@ stages:
     params:
       - data.index
       - data.summary
-      - kpis
+      - extraction
     deps:
       - src/extract.py
       - ${data.index}

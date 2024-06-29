@@ -25,5 +25,12 @@ models:
     azure_endpoint: "https://hackathonregionwestus.openai.azure.com/"
     api_version: "2024-02-01"
 
-kpis:
-  - "revenue"
+extraction:
+  citation_chunk_size: 1024
+  kpis:
+    - "revenue"
+    - "cash flow"
+    - "Cost of Goods Sold (COGS) / Cost of Materials"
+    - "Depreciation"
+    - "Amortization"
+    - "Purchase Price Allocation (PPA) / Purchase Price Adjustmen"

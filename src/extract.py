@@ -14,14 +14,12 @@ from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
 from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.core.indices.struct_store import JSONQueryEngine
 
-from .helpers import KPI, Report, RevDriver, Summary, list_json_files
+from .helpers import KPI, Report, Driver, Summary, list_json_files
 
 ########################################################################################
 # Templates
 ########################################################################################
-DRIVER_TMPL = (
-    "make a short summary about the major drivers behind {}s revenue change in {}?"
-)
+DRIVER_TMPL = "make a short summary about the major drivers behind {}s {} change in {}?"
 
 KPI_TMPL = (
     "Your job is to find a Key Performance indicator (KPI) for {} and format/return it "
@@ -52,20 +50,26 @@ def get_numbers_in_brackets(s: str) -> list[int]:
     return numbers
 
 
-def get_revdriver(index, rep: Report, top_k: int):
+def get_driver(index, rep: Report, kpi: str, cite_ch_size: int, top_k: int):
     query_engine = CitationQueryEngine.from_args(
         index,
         similarity_top_k=top_k,
-        citation_chunk_size=512,
+        citation_chunk_size=cite_ch_size,
+        response_mode="compact_accumulate",
     )
-    response = query_engine.query(DRIVER_TMPL.format(rep.company, rep.year))
+    response = query_engine.query(DRIVER_TMPL.format(rep.company, kpi, rep.year))
     bracket_nums = get_numbers_in_brackets(response.response)
     context = [response.source_nodes[i - 1].get_text() for i in bracket_nums]
-    return RevDriver(content=response.response, context=context)
+    return Driver(content=response.response, context=context)
 
 
-def get_kpi(index, rep: Report, kpi: str):
-    query_engine = index.as_query_engine(response_mode="refine")
+def get_kpi(index, rep: Report, kpi: str, cite_ch_size: int):
+    query_engine = CitationQueryEngine.from_args(
+        index,
+        similarity_top_k=1,
+        citation_chunk_size=cite_ch_size,
+        response_mode="compact_accumulate",
+    )
     response = query_engine.query(KPI_TMPL.format(rep.company, kpi))
     context = response.source_nodes[0].get_text()
 
@@ -75,11 +79,17 @@ def get_kpi(index, rep: Report, kpi: str):
     if match:
         number = match.group(1)
         currency = match.group(2)
+        driver = get_driver(
+            index=index, rep=rep, kpi=kpi, cite_ch_size=cite_ch_size, top_k=3
+        )
     else:
         number = "-1"
         currency = "-1"
+        driver = Driver(content="", context=[])
 
-    return KPI(name=kpi, value=float(number), currency=currency, context=context)
+    return KPI(
+        name=kpi, value=float(number), currency=currency, context=context, driver=driver
+    )
 
 
 ########################################################################################
@@ -92,7 +102,8 @@ def main():
     path_r = Path(cfg["data"]["chunk"])
     path_i = Path(cfg["data"]["index"])
     path_o = Path(cfg["data"]["summary"])
-    kpi_list = cfg["kpis"]
+    kpi_list = cfg["extraction"]["kpis"]
+    citation_chunk_size = cfg["extraction"]["citation_chunk_size"]
 
     # model
     embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_model"])
@@ -114,14 +125,14 @@ def main():
             )
         )
 
-        rev_driver = get_revdriver(idx, rep, 3)
-        kpis = [get_kpi(index=idx, rep=rep, kpi=kpi) for kpi in kpi_list]
+        kpis = [
+            get_kpi(index=idx, rep=rep, kpi=kpi, cite_ch_size=citation_chunk_size)
+            for kpi in kpi_list
+        ]
         kpis = [kpi for kpi in kpis if kpi.value > 0]
 
         # dump
-        sum = Summary(
-            company=rep.company, year=rep.year, rev_driver=rev_driver, kpis=kpis
-        )
+        sum = Summary(company=rep.company, year=rep.year, kpis=kpis)
         sum.save(path_o)
 
 

@@ -114,17 +114,24 @@ stages:
       nfiles: 75
     - path: src/extract.py
       hash: md5
-      md5: a7535cb8a07a95a080cc907cfdf121bb
-      size: 4300
+      md5: 6bc9f9b931bb0c8fd3c8362e8a0ffe34
+      size: 4754
     params:
       params.yaml:
         data.index: data/index/
         data.summary: data/summary/
-        kpis:
-        - revenue
+        extraction:
+          citation_chunk_size: 256
+          kpis:
+          - revenue
+          - cash flow
+          - Cost of Goods Sold (COGS) / Cost of Materials
+          - Depreciation
+          - Amortization
+          - Purchase Price Allocation (PPA) / Purchase Price Adjustmen
     outs:
     - path: data/summary/
       hash: md5
-      md5: ad249594ee152cebeca14c919ca6e589.dir
-      size: 104659
+      md5: f61c0a5d5da27ee525f9634df2f18413.dir
+      size: 105171
       nfiles: 15

@@ -33,6 +33,13 @@ class Report(BaseModel):
             return Report.model_validate_json(f.read())
 
 
+class Driver(BaseModel):
+    """Data model for revenue drivers."""
+
+    content: str
+    context: list[str]
+
+
 class KPI(BaseModel):
     """Data model for a KPI."""
 
@@ -40,13 +47,7 @@ class KPI(BaseModel):
     value: float
     currency: str
     context: str
-
-
-class RevDriver(BaseModel):
-    """Data model for revenue drivers."""
-
-    content: str
-    context: list[str]
+    driver: Driver
 
 
 class Summary(BaseModel):
@@ -54,7 +55,6 @@ class Summary(BaseModel):
 
     company: str
     year: int
-    rev_driver: RevDriver
     kpis: list[KPI]
 
     def save(self, dir_path: Path) -> None:
