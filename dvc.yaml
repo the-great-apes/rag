@@ -21,3 +21,14 @@ stages:
     outs:
       - ${data.clean}
 
+  chunk:
+    cmd: python -m src.chunk
+    params:
+      - data.clean
+      - data.chunk
+    deps:
+      - src/chunk.py
+      - ${data.clean}
+    outs:
+      - ${data.chunk}
+
