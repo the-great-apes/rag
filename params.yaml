@@ -34,3 +34,22 @@ extraction:
     - "Depreciation"
     - "Amortization"
     - "Purchase Price Allocation (PPA) / Purchase Price Adjustmen"
+
+  templates:
+    driver: "make a short summary about the major drivers behind {company}s {kpi} change in {year}?"
+    kpi: |
+      - Your job is to find a Key Performance indicator (KPI) for {company} and format/return it
+      - in the base number system (not Million/Billion) as well as retrieve the currency.\n
+      - ------------------------------------
+      - Example:
+      - IBM's revenue for the year was $61.9 billion. -> 61900000000
+      - ------------------------------------
+      - find the {kpi} KPI
+      - ------------------------------------
+      - the output is only the formatted number and currency and nothing else!
+      - if you don't find the KPI, output 'KPI not found'
+      - ------------------------------------
+      - Example output where KPI is found:
+      - 61900000000, $
+      - Example output where KPI is NOT found:
+      - KPI not found

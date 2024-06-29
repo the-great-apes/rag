@@ -5,13 +5,9 @@ stages:
     deps:
     - path: data/raw/
       hash: md5
-      md5: 8f98f72328a8b55e32ce6bd12b678036.dir
-      size: 815155223
-      nfiles: 38
-    - path: src/helpers.py
-      hash: md5
-      md5: 8c134c7850f5187ec20ad3ef69ecf4f3
-      size: 1459
+      md5: af2be1f607b53c28f5568418bb0931e0.dir
+      size: 815161371
+      nfiles: 39
     - path: src/parse.py
       hash: md5
       md5: 8e242c871587348c1b953c8fe18a77f8
@@ -114,14 +110,14 @@ stages:
       nfiles: 75
     - path: src/extract.py
       hash: md5
-      md5: 6bc9f9b931bb0c8fd3c8362e8a0ffe34
-      size: 4754
+      md5: bc8d1b9e6e50289140062194401e2f1e
+      size: 5063
     params:
       params.yaml:
         data.index: data/index/
         data.summary: data/summary/
         extraction:
-          citation_chunk_size: 256
+          citation_chunk_size: 1024
           kpis:
           - revenue
           - cash flow
@@ -129,9 +125,21 @@ stages:
           - Depreciation
           - Amortization
           - Purchase Price Allocation (PPA) / Purchase Price Adjustmen
+          templates:
+            driver: make a short summary about the major drivers behind {company}s
+              {kpi} change in {year}?
+            kpi: "- Your job is to find a Key Performance indicator (KPI) for {company}\
+              \ and format/return it\n- in the base number system (not Million/Billion)\
+              \ as well as retrieve the currency.\\n\n- ------------------------------------\n\
+              - Example:\n- IBM's revenue for the year was $61.9 billion. -> 61900000000\n\
+              - ------------------------------------\n- find the {kpi} KPI\n- ------------------------------------\n\
+              - the output is only the formatted number and currency and nothing else!\n\
+              - if you don't find the KPI, output 'KPI not found'\n- ------------------------------------\n\
+              - Example output where KPI is found:\n- 61900000000, $\n- Example output\
+              \ where KPI is NOT found:\n- KPI not found\n"
     outs:
     - path: data/summary/
       hash: md5
-      md5: f61c0a5d5da27ee525f9634df2f18413.dir
-      size: 105171
+      md5: 3e5371eb9de9ee2a46984d64a21a168c.dir
+      size: 254706
       nfiles: 15

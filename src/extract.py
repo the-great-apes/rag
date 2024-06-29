@@ -7,6 +7,7 @@ from llama_index.core import (
     Settings,
     StorageContext,
     load_index_from_storage,
+    PromptTemplate,
 )
 from llama_index.core.output_parsers import PydanticOutputParser
 from llama_index.core.query_engine import CitationQueryEngine
@@ -19,16 +20,16 @@ from .helpers import KPI, Report, Driver, Summary, list_json_files
 ########################################################################################
 # Templates
 ########################################################################################
-DRIVER_TMPL = "make a short summary about the major drivers behind {}s {} change in {}?"
+DRIVER_TMPL = "make a short summary about the major drivers behind {company}s {kpi} change in {year}?"
 
 KPI_TMPL = (
-    "Your job is to find a Key Performance indicator (KPI) for {} and format/return it "
+    "Your job is to find a Key Performance indicator (KPI) for {company} and format/return it "
     "in the base number system (not Million/Billion) as well as retrieve the currency.\n"
     "------------------------------------\n"
     "Example:\n"
     "IBM's revenue for the year was $61.9 billion. -> 61900000000\n"
     "------------------------------------\n"
-    "find the {} KPI\n"
+    "find the {kpi} KPI\n"
     "------------------------------------\n"
     "the output is only the formatted number and currency and nothing else!\n"
     "if you don't find the KPI, output 'KPI not found'\n"
@@ -38,6 +39,7 @@ KPI_TMPL = (
     "Example output where KPI is NOT found:\n"
     "KPI not found"
 )
+PROMPTS = yaml.safe_load(open("params.yaml"))["extraction"]["templates"]
 
 ########################################################################################
 # helper funcs
@@ -57,7 +59,10 @@ def get_driver(index, rep: Report, kpi: str, cite_ch_size: int, top_k: int):
         citation_chunk_size=cite_ch_size,
         response_mode="compact_accumulate",
     )
-    response = query_engine.query(DRIVER_TMPL.format(rep.company, kpi, rep.year))
+    prompt_template = PromptTemplate(PROMPTS["driver"]).format(
+        company=rep.company, kpi=kpi, year=rep.year
+    )
+    response = query_engine.query(prompt_template)
     bracket_nums = get_numbers_in_brackets(response.response)
     context = [response.source_nodes[i - 1].get_text() for i in bracket_nums]
     return Driver(content=response.response, context=context)
@@ -70,7 +75,10 @@ def get_kpi(index, rep: Report, kpi: str, cite_ch_size: int):
         citation_chunk_size=cite_ch_size,
         response_mode="compact_accumulate",
     )
-    response = query_engine.query(KPI_TMPL.format(rep.company, kpi))
+    prompt_template = PromptTemplate(PROMPTS["kpi"]).format(
+        company=rep.company, kpi=kpi, year=rep.year
+    )
+    response = query_engine.query(prompt_template)
     context = response.source_nodes[0].get_text()
 
     # extract pattern from input string
