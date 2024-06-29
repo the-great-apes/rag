@@ -1,0 +1,12 @@
+stages:
+  parse:
+    cmd: python -m src.parse
+    params:
+      - data.raw
+      - data.parsed
+    deps:
+      - src/parse.py
+      - ${data.raw}
+    outs:
+      - ${data.parsed}
+
