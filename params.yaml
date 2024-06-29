@@ -3,6 +3,8 @@ data:
   parsed: "data/parsed/"
   clean: "data/clean/"
   chunk: "data/chunk/"
+  index: "data/index/"
+
 chunking:
   buffer_size: 1
   percentile_threshold: 95
@@ -15,3 +17,9 @@ models:
     azure_endpoint: "https://regionswedencentral.openai.azure.com/"
     api_version: "2024-02-01"
 
+  llm:
+    model: "gpt-4o"
+    deployment_name: "gpt-4o-West-US"
+    api_key: "fccb3566bca141ab9fbf95e8d7ae3a70"
+    azure_endpoint: "https://hackathonregionwestus.openai.azure.com/"
+    api_version: "2024-02-01"
