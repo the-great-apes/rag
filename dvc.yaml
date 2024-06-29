@@ -10,3 +10,14 @@ stages:
     outs:
       - ${data.parsed}
 
+  clean:
+    cmd: python -m src.clean
+    params:
+      - data.parsed
+      - data.clean
+    deps:
+      - src/clean.py
+      - ${data.parsed}
+    outs:
+      - ${data.clean}
+
