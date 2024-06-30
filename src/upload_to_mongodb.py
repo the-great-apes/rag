@@ -2,10 +2,10 @@ import json
 import logging
 import os
 from collections import defaultdict
-from helpers import Summary, list_json_files
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 import logging
+from .helpers import Summary, list_json_files
 
 DATA_DB='mongodb://mongodb-data:27017/'
 DB_NAME='data_db'
