@@ -5,6 +5,7 @@ data:
   chunk: "data/chunk/"
   index: "data/index/"
   summary: "data/summary/"
+  mongo: "data/mongo"
 
 chunking:
   buffer_size: 1

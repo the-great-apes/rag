@@ -5,3 +5,4 @@ dvc
 openai
 uvicorn
 fastapi
+pymongo==4.8.0
