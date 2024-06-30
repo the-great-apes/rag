@@ -38,6 +38,7 @@ extraction:
     - "PPA"
     - "Purchase Price Adjustmen"
 
+
   templates:
     driver: "make a short summary about the major drivers behind {company}s {kpi} change in {year}?"
     kpi: |
@@ -57,3 +58,9 @@ extraction:
       - 61900000000, $
       - Example output where KPI is NOT found:
       - KPI not found
+    summary: |
+      - You are a professional Financial and Business analyst and you just read an incredibly long annual report of the company {company} from the year {year}.
+      - You are super proud of yourself and therefore you want to summarize all the information you gathered to give your coworkers the shortest
+      - and most informative summary about the annual report. Following sidenotes about the KPIs of the company you managed to gather:
+      - {kpis}
+      - Be as precise and short as possible with your summary, since people don't like long text and would lose interest.  

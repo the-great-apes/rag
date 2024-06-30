@@ -1,7 +1,36 @@
 from pydantic import BaseModel
 from pathlib import Path
+from openai import AzureOpenAI
+import yaml
 
 
+cfg = yaml.safe_load(open("params.yaml"))
+PROMPTS = cfg["extraction"]["templates"]
+LLM = cfg['models']['llm']
+
+client = AzureOpenAI(
+  api_key = LLM["api_key"],  
+  api_version = LLM['api_version'],
+  azure_endpoint = LLM['azure_endpoint']
+)
+
+
+import os
+import logging
+try:
+    log_level = os.environ['LOG_LEVEL'].upper()
+except KeyError:
+    log_level = 'INFO'
+
+log_level_mapping = {
+    'DEBUG': logging.DEBUG,
+    'INFO': logging.INFO,
+    'WARNING': logging.WARNING,
+    'ERROR': logging.ERROR,
+    'CRITICAL': logging.CRITICAL
+}
+
+logging.basicConfig(level=log_level_mapping.get(log_level, logging.WARNING))
 ########################################################################################
 # pydantic classes
 ########################################################################################
@@ -56,6 +85,23 @@ class Summary(BaseModel):
     company: str
     year: int
     kpis: list[KPI]
+    overall_summary: str = ""
+
+
+    def create_summary(self):
+        response = client.chat.completions.create(
+            messages=[
+                {"role": "user", "content": PROMPTS['summary'].format(
+                    company=self.company,  year=self.year, kpis=self.kpis,)}
+            ],
+            model=LLM['deployment_name'],
+            max_tokens=512
+        )
+
+        # Print the response
+        logging.info(response.choices[0].message.content.strip())
+        self.overall_summary = response.choices[0].message.content.strip()
+
 
     def save(self, dir_path: Path) -> None:
         dir_path.mkdir(parents=True, exist_ok=True)
