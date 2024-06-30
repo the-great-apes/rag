@@ -20,25 +20,8 @@ from .helpers import KPI, Report, Driver, Summary, list_json_files
 ########################################################################################
 # Templates
 ########################################################################################
-DRIVER_TMPL = "make a short summary about the major drivers behind {company}s {kpi} change in {year}?"
 
-KPI_TMPL = (
-    "Your job is to find a Key Performance indicator (KPI) for {company} and format/return it "
-    "in the base number system (not Million/Billion) as well as retrieve the currency.\n"
-    "------------------------------------\n"
-    "Example:\n"
-    "IBM's revenue for the year was $61.9 billion. -> 61900000000\n"
-    "------------------------------------\n"
-    "find the {kpi} KPI\n"
-    "------------------------------------\n"
-    "the output is only the formatted number and currency and nothing else!\n"
-    "if you don't find the KPI, output 'KPI not found'\n"
-    "------------------------------------\n"
-    "Example output where KPI is found:\n"
-    "61900000000, $"
-    "Example output where KPI is NOT found:\n"
-    "KPI not found"
-)
+KPI_TMPL = ()
 PROMPTS = yaml.safe_load(open("params.yaml"))["extraction"]["templates"]
 
 ########################################################################################
