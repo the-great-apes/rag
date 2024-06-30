@@ -11,4 +11,4 @@ RUN pip install -U -r requirements.txt
 RUN dvc update -R data/
 RUN dvc repro
 
-CMD [ "python", -m "src.upload_to_mongodb"]
+CMD [ "python", "-m", "src.upload_to_mongodb"]
