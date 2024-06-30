@@ -17,12 +17,11 @@ models:
     api_key: "58388c947e0540da94bc64899b945ae8"
     azure_endpoint: "https://regionswedencentral.openai.azure.com/"
     api_version: "2024-02-01"
-
   llm:
     model: "gpt-4o"
-    deployment_name: "gpt-4o-West-US"
-    api_key: "fccb3566bca141ab9fbf95e8d7ae3a70"
-    azure_endpoint: "https://hackathonregionwestus.openai.azure.com/"
+    deployment_name: "gpt-4o-Sweden-Central"
+    api_key: "58388c947e0540da94bc64899b945ae8"
+    azure_endpoint: "https://regionswedencentral.openai.azure.com/"
     api_version: "2024-02-01"
 
 extraction:
@@ -30,14 +29,19 @@ extraction:
   kpis:
     - "revenue"
     - "cash flow"
-    - "Cost of Goods Sold (COGS) / Cost of Materials"
+    - "Cost of Goods Sold"
+    - "COGS"
+    - "Cost of Materials"
     - "Depreciation"
     - "Amortization"
-    - "Purchase Price Allocation (PPA) / Purchase Price Adjustmen"
+    - "Purchase Price Allocation"
+    - "PPA"
+    - "Purchase Price Adjustmen"
 
   templates:
     driver: "make a short summary about the major drivers behind {company}s {kpi} change in {year}?"
     kpi: |
+      - You are a professional Financial and Business analyst.
       - Your job is to find a Key Performance indicator (KPI) for {company} and format/return it
       - in the base number system (not Million/Billion) as well as retrieve the currency.\n
       - ------------------------------------

@@ -16,7 +16,22 @@ from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.core.indices.struct_store import JSONQueryEngine
 
 from .helpers import KPI, Report, Driver, Summary, list_json_files
+import os
+import logging
+try:
+    log_level = os.environ['LOG_LEVEL'].upper()
+except KeyError:
+    log_level = 'INFO'
 
+log_level_mapping = {
+    'DEBUG': logging.DEBUG,
+    'INFO': logging.INFO,
+    'WARNING': logging.WARNING,
+    'ERROR': logging.ERROR,
+    'CRITICAL': logging.CRITICAL
+}
+
+logging.basicConfig(level=log_level_mapping.get(log_level, logging.WARNING))
 ########################################################################################
 # Templates
 ########################################################################################
@@ -63,7 +78,9 @@ def get_driver(index, rep: Report, kpi: str, cite_ch_size: int, top_k: int):
         company=rep.company, kpi=kpi, year=rep.year
     )
     response = query_engine.query(prompt_template)
+    logging.info(response)
     bracket_nums = get_numbers_in_brackets(response.response)
+    logging.info(bracket_nums)
     context = [response.source_nodes[i - 1].get_text() for i in bracket_nums]
     return Driver(content=response.response, context=context)
 
@@ -71,7 +88,7 @@ def get_driver(index, rep: Report, kpi: str, cite_ch_size: int, top_k: int):
 def get_kpi(index, rep: Report, kpi: str, cite_ch_size: int):
     query_engine = CitationQueryEngine.from_args(
         index,
-        similarity_top_k=1,
+        similarity_top_k=3,
         citation_chunk_size=cite_ch_size,
         response_mode="compact_accumulate",
     )
