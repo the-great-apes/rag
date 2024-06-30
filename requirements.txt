@@ -3,6 +3,4 @@ llama-index-embeddings-azure-openai
 llama-index-llms-azure-openai
 dvc
 openai
-uvicorn
-fastapi
 pymongo==4.8.0

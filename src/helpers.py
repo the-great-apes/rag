@@ -14,23 +14,6 @@ client = AzureOpenAI(
   azure_endpoint = LLM['azure_endpoint']
 )
 
-
-import os
-import logging
-try:
-    log_level = os.environ['LOG_LEVEL'].upper()
-except KeyError:
-    log_level = 'INFO'
-
-log_level_mapping = {
-    'DEBUG': logging.DEBUG,
-    'INFO': logging.INFO,
-    'WARNING': logging.WARNING,
-    'ERROR': logging.ERROR,
-    'CRITICAL': logging.CRITICAL
-}
-
-logging.basicConfig(level=log_level_mapping.get(log_level, logging.WARNING))
 ########################################################################################
 # pydantic classes
 ########################################################################################
@@ -97,9 +80,6 @@ class Summary(BaseModel):
             model=LLM['deployment_name'],
             max_tokens=512
         )
-
-        # Print the response
-        logging.info(response.choices[0].message.content.strip())
         self.overall_summary = response.choices[0].message.content.strip()
 
 

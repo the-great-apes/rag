@@ -66,12 +66,6 @@ log_level_mapping = {
 
 logging.basicConfig(level=log_level_mapping.get(log_level, logging.WARNING))
 
-DATA_PATH = "/app/data"
-# Print the parsed data
-
-COMPANY_REFS = ["ABB", "IBM", "PostFinance", "Raiffeisen", "Siemens", "UBS"]
-
-
 def write_companies():
     write_document("companies", {"companies": list(data.keys())})
 
@@ -85,7 +79,7 @@ def write_report(comp: str, year: str):
 def main():
     data = defaultdict(defaultdict)
 
-    json_files = list_json_files(Path("data/summary"))
+    json_files = list_json_files("/app/data/summary")
 
     for s in [Summary.load(f) for f in json_files]:
         data[s.company][s.year] = s
