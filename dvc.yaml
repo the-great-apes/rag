@@ -54,15 +54,3 @@ stages:
       - ${data.index}
     outs:
       - ${data.summary}
-
-
-  upload_mongo:
-    cmd: python -m src.upload_data.upload_to_mongodb
-    params:
-      - data.summary
-    deps:
-      - src/upload_to_mongodb/upload_to_mongodb.py
-      - src/upload_to_mongodb/write_data.py
-      - ${data.summary}
-    outs:
-      - ${data.mongo}
