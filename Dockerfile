@@ -11,4 +11,8 @@ RUN pip install -U -r requirements.txt
 RUN dvc update -R data/
 
 # run pipeline
-CMD ["dvc", "repro"]
+RUN dvc repro
+
+# start api
+EXPOSE 8000
+CMD [ "python", "-m", "src.api" ]
