@@ -98,8 +98,8 @@ stages:
       nfiles: 75
     - path: src/extract.py
       hash: md5
-      md5: 4d01aed574615250b29ff58709717c6a
-      size: 5488
+      md5: f0f6eb64fa44e05cc04a5de56bcb08c0
+      size: 5092
     params:
       params.yaml:
         data.index: data/index/
@@ -130,9 +130,18 @@ stages:
               - if you don't find the KPI, output 'KPI not found'\n- ------------------------------------\n
               - Example output where KPI is found:\n- 61900000000, $\n- Example output
               where KPI is NOT found:\n- KPI not found\n"
+            summary: "- You are a professional Financial and Business analyst and
+              you just read an incredibly long annual report of the company {company}
+              from the year {year}.\n- You are super proud of yourself and therefore
+              you want to summarize all the information you gathered to give your
+              coworkers the shortest\n- and most informative summary about the annual
+              report. Following sidenotes about the KPIs of the company you managed
+              to gather:\n- {kpis}\n- Be as precise and short as possible with your
+              summary, since people don't like long text and would lose interest.\
+              \  \n"
     outs:
     - path: data/summary/
       hash: md5
-      md5: 843d960c5cc57d736d91fbf4a5a79d4e.dir
-      size: 509335
+      md5: 724956e99694ce8ef908793613e51278.dir
+      size: 530201
       nfiles: 15
