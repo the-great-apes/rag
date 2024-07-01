@@ -1,6 +1,6 @@
 services:
-  llm-serivce:
-    container_name: llm-serivce
+  llm-service:
+    container_name: llm-service
     build: 
       context: ..
       dockerfile: cuda/Dockerfile    
