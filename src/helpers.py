@@ -21,8 +21,7 @@ else:
     client = Groq(
         api_key=os.environ.get("GROQ_API_KEY"),
     )
-
-
+os.environ.get("GROQ_API_KEY")
 
 
 ########################################################################################

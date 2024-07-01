@@ -11,9 +11,11 @@ import yaml
 DATA_DB='mongodb://mongodb-data:27017/'
 DB_NAME='data_db'
 
-cfg = yaml.safe_load(open("params.yaml"))
+cfg = yaml.safe_load(open("/app/params.yaml"))
+use_openai = cfg["use_openai"]
+print(f"use_openai: {use_openai}")
 
-if cfg["use_openai"]:
+if use_openai:
     COLLECTION_NAME = "openai"
 else:
     COLLECTION_NAME = "groq"
@@ -41,9 +43,9 @@ def write_document(ref_key, data):
 
             # Print feedback on whether a new document was inserted or an existing one updated
             if result.upserted_id:
-                logging.info(f"New document inserted with ID: {result.upserted_id}")
+                logging.info(f"New document inserted with ID: {result.upserted_id} into {COLLECTION_NAME} collection")
             else:
-                logging.info(f"Existing document updated with key reference: {ref_key}")
+                logging.info(f"Existing document updated with key reference: {ref_key} in collection {COLLECTION_NAME}")
         
         except PyMongoError as e:
             logging.error(f"Error occurred while upserting data: {e}")
@@ -77,7 +79,7 @@ def write_companies(data):
 def write_years(data, comp: str):
     write_document(f"{comp}-years", {"years": list(data[comp].keys())})
 
-def write_report(collection, data, comp: str, year: int):
+def write_report(data, comp: str, year: int):
     write_document(f"{comp}-{year}", {"report": data[comp][year].model_dump_json()})
 
 def main():

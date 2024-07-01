@@ -89,7 +89,9 @@ def get_kpi(index, rep: Report, kpi: str, cite_ch_size: int):
 ########################################################################################
 # main
 ########################################################################################
-
+cfg = yaml.safe_load(open("/app/params.yaml"))
+use_openai = cfg["use_openai"]
+print(f"use_openai: {use_openai}")
 
 def main():
     cfg = yaml.safe_load(open("params.yaml"))
@@ -100,7 +102,7 @@ def main():
     citation_chunk_size = cfg["extraction"]["citation_chunk_size"]
 
     # model
-    if cfg["use_openai"]:
+    if use_openai:
         embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_openai"])
         llm = AzureOpenAI(**cfg["models"]["openai"])
     else:

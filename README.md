@@ -13,7 +13,7 @@ use_openai: true
 Run the docker container standalone or with the rest of the parent repository.
 
 ## Using Groq
-As mentioned create a Groq API Key. Copy the `.env.template`-file, rename it to simply `.env` and edit the line with 
+As mentioned create a Groq API Key. Copy the `.env.template`-file in the parent repo, rename it to simply `.env` and edit the line with 
 ```
 GROQ_API_KEY=yoUrApIkEY
 ```
@@ -35,12 +35,8 @@ include:
 
 ## Disable DVC to only upload data to mongodb
 If you already have the data you needed with the llm gathered in the `data/summary/` folder and you only need the container to upload your data to the mongodb instance of the parent repo, disable DVC in the parent repos docker compose file like this:
+Copy the `.env.template`-file in the parent repo, rename it to simply `.env` and edit the line with 
 
 ```
-  llm-serivce:
-    ...
-    environment:
-      - RUN_DVC=false # Set this true if you want to rerun the full data extraction 
-      ...
-    
+ RUN_DVC=false   
 ```

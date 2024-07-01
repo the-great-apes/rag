@@ -39,7 +39,9 @@ def chunk_text(
 ########################################################################################
 # main
 ########################################################################################
-
+cfg = yaml.safe_load(open("/app/params.yaml"))
+use_openai = cfg["use_openai"]
+print(f"use_openai: {use_openai}")
 
 def main():
     cfg = yaml.safe_load(open("params.yaml"))
@@ -49,7 +51,7 @@ def main():
     chunk_percentile_threshold = cfg["chunking"]["percentile_threshold"]
 
     # model
-    if cfg["use_openai"]:
+    if use_openai:
         embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_openai"])
     else:
         embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_local"]["model"],

@@ -7,9 +7,9 @@ services:
     depends_on:
       - mongodb-data
     environment:
-      - RUN_DVC=true # Set this true if you want to rerun the full data extraction
+      - RUN_DVC=$RUN_DVC # Set this true if you want to rerun the full data extraction
       - EMBEDDING_DEVICE=cpu
-      - NVIDIA_VISIBLE_DEVICES=all
+      - GROQ_API_KEY=$GROQ_API_KEY
     volumes:
      - llm_data:/app/data
     networks:
