@@ -31,7 +31,7 @@ include:
   - ./llm_service/cpu/docker-compose.yml #Comment this out 
   #- ./llm_service/cuda/docker-compose.yml # And uncomment this to use gpu
 ```
-
+For using the cuda version, please note that you will have to have the gpu drivers, cuda drivers and the [container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) installed on your system.
 
 ## Disable DVC to only upload data to mongodb
 If you already have the data you needed with the llm gathered in the `data/summary/` folder and you only need the container to upload your data to the mongodb instance of the parent repo, disable DVC in the parent repos docker compose file like this:
