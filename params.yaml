@@ -11,7 +11,7 @@ chunking:
   buffer_size: 1
   percentile_threshold: 95
 
-use_openai: false
+use_openai: true
 
 models:
   embed_model:
