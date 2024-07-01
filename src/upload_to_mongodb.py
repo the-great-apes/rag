@@ -66,14 +66,14 @@ log_level_mapping = {
 
 logging.basicConfig(level=log_level_mapping.get(log_level, logging.WARNING))
 
-def write_companies():
+def write_companies(data):
     write_document("companies", {"companies": list(data.keys())})
 
-def write_years(comp: str):
+def write_years(data, comp: str):
     write_document(f"{comp}-years", {"years": list(data[comp].keys())})
 
-def write_report(comp: str, year: str):
-    write_document(f"{comp}-{year}", {"report": data[comp][int(year)].model_dump_json()})
+def write_report(data, comp: str, year: int):
+    write_document(f"{comp}-{year}", {"report": data[comp][year].model_dump_json()})
 
 
 def main():
@@ -84,11 +84,11 @@ def main():
     for s in [Summary.load(f) for f in json_files]:
         data[s.company][s.year] = s
 
-    write_companies()
+    write_companies(data)
     for c in data.keys():
-        write_years(c)
+        write_years(data, c)
         for y in data['c'].keys():
-            write_report(c, y)
+            write_report(data, c, y)
     
 
         
