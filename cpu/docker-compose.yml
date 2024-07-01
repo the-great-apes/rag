@@ -1,0 +1,25 @@
+services:
+  llm-serivce:
+    container_name: llm-serivce
+    build: 
+      context: ..
+      dockerfile: cpu/Dockerfile    
+    depends_on:
+      - mongodb-data
+    environment:
+      - RUN_DVC=true # Set this true if you want to rerun the full data extraction
+      - EMBEDDING_DEVICE=cpu
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+     - llm_data:/app/data
+    networks:
+      - aiquity-net
+    stdin_open: true
+    tty: true
+
+networks:
+  cereneo-net:
+    driver: bridge
+
+volumes:
+  llm_data:

@@ -1,6 +1,6 @@
 stages:
   parse:
-    cmd: python -m src.parse
+    cmd: python3 -m src.parse
     params:
       - data.raw
       - data.parsed
@@ -11,7 +11,7 @@ stages:
       - ${data.parsed}
 
   clean:
-    cmd: python -m src.clean
+    cmd: python3 -m src.clean
     params:
       - data.parsed
       - data.clean
@@ -22,7 +22,7 @@ stages:
       - ${data.clean}
 
   chunk:
-    cmd: python -m src.chunk
+    cmd: python3 -m src.chunk
     params:
       - data.clean
       - data.chunk
@@ -33,7 +33,7 @@ stages:
       - ${data.chunk}
 
   index:
-    cmd: python -m src.index
+    cmd: python3 -m src.index
     params:
       - data.chunk
       - data.index
@@ -44,7 +44,7 @@ stages:
       - ${data.index}
 
   extract:
-    cmd: python -m src.extract
+    cmd: python3 -m src.extract
     params:
       - data.index
       - data.summary

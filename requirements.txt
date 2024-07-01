@@ -1,6 +1,9 @@
 llama-index
 llama-index-embeddings-azure-openai
+llama-index-embeddings-huggingface
 llama-index-llms-azure-openai
+llama-index-llms-groq
 dvc
 openai
+groq
 pymongo==4.8.0

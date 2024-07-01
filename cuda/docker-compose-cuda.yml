@@ -1,0 +1,31 @@
+services:
+  llm-serivce:
+    container_name: llm-serivce
+    build: 
+      context: ..
+      dockerfile: cuda/Dockerfile    
+    depends_on:
+      - mongodb-data
+    environment:
+      - RUN_DVC=false # Set this true if you want to rerun the full data extraction 
+      - NVIDIA_VISIBLE_DEVICES=all
+      - EMBEDDING_DEVICE=cuda:0
+    volumes:
+     - llm_data:/app/data
+    networks:
+      - aiquity-net
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1 #TODO: Change this if you want your model to run on multiple GPUs!!!
+              capabilities: [gpu]
+networks:
+  aiquity-net:
+    driver: bridge
+
+volumes:
+  llm_data:

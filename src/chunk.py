@@ -2,11 +2,13 @@ from llama_index.core import Document
 from tqdm import tqdm
 import yaml
 from pathlib import Path
+import os
 
 from .helpers import Report, Chunk, list_json_files
 
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 
 ########################################################################################
@@ -47,7 +49,11 @@ def main():
     chunk_percentile_threshold = cfg["chunking"]["percentile_threshold"]
 
     # model
-    embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_model"])
+    if cfg["use_openai"]:
+        embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_openai"])
+    else:
+        embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_local"]["model"],
+                                           device=os.environ.get("EMBEDDING_DEVICE"))
 
     # parse files
     files = list_json_files(path_i)

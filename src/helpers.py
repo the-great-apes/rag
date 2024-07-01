@@ -1,18 +1,29 @@
 from pydantic import BaseModel
 from pathlib import Path
 from openai import AzureOpenAI
+from groq import Groq
+import os
 import yaml
 
 
 cfg = yaml.safe_load(open("params.yaml"))
 PROMPTS = cfg["extraction"]["templates"]
-LLM = cfg['models']['llm']
 
-client = AzureOpenAI(
-  api_key = LLM["api_key"],  
-  api_version = LLM['api_version'],
-  azure_endpoint = LLM['azure_endpoint']
-)
+if cfg['use_openai']:
+    LLM = cfg['models']['openai']
+    client = AzureOpenAI(
+    api_key = LLM["api_key"],  
+    api_version = LLM['api_version'],
+    azure_endpoint = LLM['azure_endpoint']
+    )
+else:
+    LLM = cfg['models']['groq']    
+    client = Groq(
+        api_key=os.environ.get("GROQ_API_KEY"),
+    )
+
+
+
 
 ########################################################################################
 # pydantic classes

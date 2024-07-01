@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 import yaml
 from llama_index.core import (
@@ -8,7 +9,9 @@ from llama_index.core import (
 )
 from tqdm import tqdm
 from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.azure_openai import AzureOpenAI
+from llama_index.llms.groq import Groq
 
 from .helpers import Report, list_json_files
 
@@ -23,8 +26,14 @@ def main():
     path_o = Path(cfg["data"]["index"])
 
     # model
-    embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_model"])
-    llm = AzureOpenAI(**cfg["models"]["llm"])
+    if cfg["use_openai"]:
+        embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_openai"])
+        llm = AzureOpenAI(**cfg["models"]["openai"])
+    else:
+        embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_local"]["model"],
+                                           device=os.environ.get("EMBEDDING_DEVICE"))
+        llm = Groq(model=cfg["models"]["groq"]['deployment_name'],
+                   api_key=os.environ.get("GROQ_API_KEY"))
 
     # settings
     Settings.llm = llm

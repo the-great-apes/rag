@@ -14,22 +14,23 @@ chunking:
 use_openai: true
 
 models:
-  embed_model:
+  embed_openai:
     model: "text-embedding-ada-002"
     deployment_name: "ada-3"
     api_key: "58388c947e0540da94bc64899b945ae8"
     azure_endpoint: "https://regionswedencentral.openai.azure.com/"
     api_version: "2024-02-01"
-  embed_model_local:
+  embed_local:
     model: "intfloat/multilingual-e5-base"
-    device: "cuda:0"
 
-  llm:
+  openai:
     model: "gpt-4o"
     deployment_name: "gpt-4o-Sweden-Central"
     api_key: "58388c947e0540da94bc64899b945ae8"
     azure_endpoint: "https://regionswedencentral.openai.azure.com/"
     api_version: "2024-02-01"
+  groq: 
+    deployment_name: "llama3-70b-8192"
 
 extraction:
   citation_chunk_size: 1024

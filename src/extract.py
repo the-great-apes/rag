@@ -1,5 +1,6 @@
 import re
 from pathlib import Path
+import os
 
 from tqdm import tqdm
 import yaml
@@ -14,6 +15,7 @@ from llama_index.core.query_engine import CitationQueryEngine
 from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.azure_openai import AzureOpenAI
+from llama_index.llms.groq import Groq
 from llama_index.core.indices.struct_store import JSONQueryEngine
 
 from .helpers import KPI, Report, Driver, Summary, list_json_files
@@ -99,14 +101,13 @@ def main():
 
     # model
     if cfg["use_openai"]:
-        embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_model"])
+        embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_openai"])
+        llm = AzureOpenAI(**cfg["models"]["openai"])
     else:
-        embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_model_local"]["model"],
-                                           device=cfg["models"]["embed_model_local"]["device"])
-    
-    #if cfg["use_openai"]:
-    # TODO: implement usage of another llm but OpenAI GPT4o
-    llm = AzureOpenAI(**cfg["models"]["llm"])
+        embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_local"]["model"],
+                                           device=os.environ.get("EMBEDDING_DEVICE"))
+        llm = Groq(model=cfg["models"]["groq"]['deployment_name'],
+                   api_key=os.environ.get("GROQ_API_KEY"))
 
     # settings
     Settings.llm = llm

@@ -6,18 +6,23 @@ from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 import logging
 from .helpers import Summary, list_json_files
+import yaml
 
 DATA_DB='mongodb://mongodb-data:27017/'
 DB_NAME='data_db'
-COLLECTION_NAME='swisshacks'
+
+cfg = yaml.safe_load(open("params.yaml"))
+
+if cfg["use_openai"]:
+    COLLECTION_NAME = "openai"
+else:
+    COLLECTION_NAME = "groq"
+
 
 def write_document(ref_key, data):
     try:
         client = MongoClient(DATA_DB)
         db = client[DB_NAME]  # Replace with your data database name
-        collection_names = db.list_collection_names()
-        if not COLLECTION_NAME in collection_names:
-            db.create_collection(COLLECTION_NAME)
         collection = db[COLLECTION_NAME]  
         
         # Check if the connection is successful
@@ -72,7 +77,7 @@ def write_companies(data):
 def write_years(data, comp: str):
     write_document(f"{comp}-years", {"years": list(data[comp].keys())})
 
-def write_report(data, comp: str, year: int):
+def write_report(collection, data, comp: str, year: int):
     write_document(f"{comp}-{year}", {"report": data[comp][year].model_dump_json()})
 
 def main():
