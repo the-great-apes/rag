@@ -12,6 +12,7 @@ from llama_index.core import (
 from llama_index.core.output_parsers import PydanticOutputParser
 from llama_index.core.query_engine import CitationQueryEngine
 from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.core.indices.struct_store import JSONQueryEngine
 
@@ -97,7 +98,14 @@ def main():
     citation_chunk_size = cfg["extraction"]["citation_chunk_size"]
 
     # model
-    embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_model"])
+    if cfg["use_openai"]:
+        embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_model"])
+    else:
+        embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_model_local"]["model"],
+                                           device=cfg["models"]["embed_model_local"]["device"])
+    
+    #if cfg["use_openai"]:
+    # TODO: implement usage of another llm but OpenAI GPT4o
     llm = AzureOpenAI(**cfg["models"]["llm"])
 
     # settings

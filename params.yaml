@@ -11,6 +11,8 @@ chunking:
   buffer_size: 1
   percentile_threshold: 95
 
+use_openai: false
+
 models:
   embed_model:
     model: "text-embedding-ada-002"
@@ -18,6 +20,10 @@ models:
     api_key: "58388c947e0540da94bc64899b945ae8"
     azure_endpoint: "https://regionswedencentral.openai.azure.com/"
     api_version: "2024-02-01"
+  embed_model_local:
+    model: "intfloat/multilingual-e5-base"
+    device: "cuda:0"
+
   llm:
     model: "gpt-4o"
     deployment_name: "gpt-4o-Sweden-Central"

@@ -75,7 +75,6 @@ def write_years(data, comp: str):
 def write_report(data, comp: str, year: int):
     write_document(f"{comp}-{year}", {"report": data[comp][year].model_dump_json()})
 
-
 def main():
     data = defaultdict(defaultdict)
 
@@ -85,9 +84,12 @@ def main():
         data[s.company][s.year] = s
 
     write_companies(data)
-    for c in data.keys():
+    
+    companies = list(data.keys())  # Create a static list of keys
+    for c in companies:
         write_years(data, c)
-        for y in data['c'].keys():
+        years = list(data[c].keys())  # Create a static list of keys for each company
+        for y in years:
             write_report(data, c, y)
     
 
