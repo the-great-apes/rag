@@ -8,7 +8,7 @@ COPY requirements.txt /root/requirements.txt
 RUN pip install -r requirements.txt
 RUN cat 
 
-FROM cpu_base as nlp_service
+FROM cpu_base as llm_service_cpu
 
 # copy data
 WORKDIR /app
