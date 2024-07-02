@@ -5,7 +5,6 @@ data:
   chunk: "data/chunk/"
   index: "data/index/"
   summary: "data/summary/"
-  mongo: "data/mongo"
 
 chunking:
   buffer_size: 1
@@ -13,7 +12,7 @@ chunking:
 
 database: # The final database we store the data in.
   mongo_db:
-    host: "mongodb-data" # Change it to localhost if you do not run it from docker
+    host: "mongodb-data" # Options: "mongodb-data" or "localhost". Change it to localhost if you do not run it from docker
     port: 27017
     db_name: "data_db"
 
