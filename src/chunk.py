@@ -39,8 +39,8 @@ def chunk_text(
 ########################################################################################
 # main
 ########################################################################################
-cfg = yaml.safe_load(open("/app/params.yaml"))
-use_openai = cfg["use_openai"]
+cfg = yaml.safe_load(open("params.yaml"))
+use_openai = cfg['model_to_use'] == "openai"
 print(f"use_openai: {use_openai}")
 
 def main():

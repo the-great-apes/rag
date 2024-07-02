@@ -8,10 +8,8 @@ import logging
 from .helpers import Summary, list_json_files
 import yaml
 
-DATA_DB='mongodb://mongodb-data:27017/'
-DB_NAME='data_db'
 
-cfg = yaml.safe_load(open("/app/params.yaml"))
+cfg = yaml.safe_load(open("params.yaml"))
 use_openai = cfg["use_openai"]
 print(f"use_openai: {use_openai}")
 
@@ -23,8 +21,9 @@ else:
 
 def write_document(ref_key, data):
     try:
-        client = MongoClient(DATA_DB)
-        db = client[DB_NAME]  # Replace with your data database name
+        mdb_conf = cfg['database']['mongodb']
+        client = MongoClient(f"mongodb://{mdb_conf['host']}:{mdb_conf['port']}")
+        db = client[mdb_conf['db_name']]  # Replace with your data database name
         collection = db[COLLECTION_NAME]  
         
         # Check if the connection is successful

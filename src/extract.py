@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 import os
+import time
 
 from tqdm import tqdm
 import yaml
@@ -18,6 +19,7 @@ from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.llms.groq import Groq
 from llama_index.core.indices.struct_store import JSONQueryEngine
 
+from .local_models.phi3 import Phi3
 from .helpers import KPI, Report, Driver, Summary, list_json_files
 
 ########################################################################################
@@ -53,6 +55,20 @@ def get_driver(index, rep: Report, kpi: str, cite_ch_size: int, top_k: int):
     context = [response.source_nodes[i - 1].get_text() for i in bracket_nums]
     return Driver(content=response.response, context=context)
 
+def get_response(query_engine, prompt):
+    got_response = False
+    response = ""
+    while not got_response:
+        try:
+            response = query_engine.query(prompt)
+            got_response = True
+        except Exception as e:
+            print(f"Could not get response: {e}")
+            # If we fail since groq has limited token access
+            # sleep for 60s and retry
+            time.sleep(60.0)
+    return response
+
 
 def get_kpi(index, rep: Report, kpi: str, cite_ch_size: int):
     query_engine = CitationQueryEngine.from_args(
@@ -64,7 +80,7 @@ def get_kpi(index, rep: Report, kpi: str, cite_ch_size: int):
     prompt_template = PromptTemplate(PROMPTS["kpi"]).format(
         company=rep.company, kpi=kpi, year=rep.year
     )
-    response = query_engine.query(prompt_template)
+    response = get_response(query_engine, prompt_template)
     context = response.source_nodes[0].get_text()
 
     # extract pattern from input string
@@ -89,9 +105,7 @@ def get_kpi(index, rep: Report, kpi: str, cite_ch_size: int):
 ########################################################################################
 # main
 ########################################################################################
-cfg = yaml.safe_load(open("/app/params.yaml"))
-use_openai = cfg["use_openai"]
-print(f"use_openai: {use_openai}")
+cfg = yaml.safe_load(open("params.yaml"))
 
 def main():
     cfg = yaml.safe_load(open("params.yaml"))
@@ -102,14 +116,19 @@ def main():
     citation_chunk_size = cfg["extraction"]["citation_chunk_size"]
 
     # model
-    if use_openai:
+    if cfg['model_to_use'] == "openai":
         embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_openai"])
         llm = AzureOpenAI(**cfg["models"]["openai"])
-    else:
+    elif cfg['model_to_use'] == "groq":
         embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_local"]["model"],
                                            device=os.environ.get("EMBEDDING_DEVICE"))
         llm = Groq(model=cfg["models"]["groq"]['deployment_name'],
                    api_key=os.environ.get("GROQ_API_KEY"))
+    else:
+        embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_local"]["model"],
+                                           device=os.environ.get("EMBEDDING_DEVICE"))
+        llm =  Phi3(cfg["models"]["hf_phi3"]['model'], cfg["models"]["hf_phi3"]['max_context_size']).get_llm()
+
 
     # settings
     Settings.llm = llm

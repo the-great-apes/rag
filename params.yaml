@@ -11,7 +11,13 @@ chunking:
   buffer_size: 1
   percentile_threshold: 95
 
-use_openai: true
+database: # The final database we store the data in.
+  mongo_db:
+    host: "mongodb-data" # Change it to localhost if you do not run it from docker
+    port: 27017
+    db_name: "data_db"
+
+model_to_use: "phi3" # Options: "phi3", "openai", "groq" but groq currently won't work cuz of token limits
 
 models:
   embed_openai:
@@ -30,7 +36,10 @@ models:
     azure_endpoint: "https://regionswedencentral.openai.azure.com/"
     api_version: "2024-02-01"
   groq: 
-    deployment_name: "llama3-70b-8192"
+    deployment_name: "llama3-8b-8192"
+  hf_phi3:
+    model: "microsoft/Phi-3-mini-4k-instruct"
+    max_context_size: 4096
 
 extraction:
   citation_chunk_size: 1024

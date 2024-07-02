@@ -2,26 +2,33 @@ from pydantic import BaseModel
 from pathlib import Path
 from openai import AzureOpenAI
 from groq import Groq
+from .local_models.phi3 import Phi3
 import os
 import yaml
+import time
 
 
 cfg = yaml.safe_load(open("params.yaml"))
 PROMPTS = cfg["extraction"]["templates"]
 
-if cfg['use_openai']:
+if cfg['model_to_use'] == "openai":
     LLM = cfg['models']['openai']
     client = AzureOpenAI(
-    api_key = LLM["api_key"],  
-    api_version = LLM['api_version'],
-    azure_endpoint = LLM['azure_endpoint']
+        api_key = LLM["api_key"],  
+        api_version = LLM['api_version'],
+        azure_endpoint = LLM['azure_endpoint']
     )
-else:
+elif cfg['model_to_use'] == "groq":
     LLM = cfg['models']['groq']    
     client = Groq(
         api_key=os.environ.get("GROQ_API_KEY"),
     )
-os.environ.get("GROQ_API_KEY")
+    os.environ.get("GROQ_API_KEY")
+else:
+    #Use Phi3
+    LLM = cfg['models']["hf_phi3"]
+    client = Phi3(LLM['model'])
+
 
 
 ########################################################################################
@@ -82,15 +89,26 @@ class Summary(BaseModel):
 
 
     def create_summary(self):
-        response = client.chat.completions.create(
-            messages=[
-                {"role": "user", "content": PROMPTS['summary'].format(
-                    company=self.company,  year=self.year, kpis=self.kpis,)}
-            ],
-            model=LLM['deployment_name'],
-            max_tokens=512
-        )
-        self.overall_summary = response.choices[0].message.content.strip()
+        got_response = False
+        response = ""
+        while not got_response:
+            try:
+                response = client.chat.completions.create(
+                    messages=[
+                        {"role": "user", "content": PROMPTS['summary'].format(
+                            company=self.company,  year=self.year, kpis=self.kpis,)}
+                    ],
+                    model=LLM['deployment_name'],
+                    max_tokens=512
+                )
+                self.overall_summary = response.choices[0].message.content.strip()
+                got_response = True
+            except Exception as e:
+                print(f"Could not get response: {e}")
+                # If we fail since groq has limited token access
+                # sleep for 60s and retry
+                time.sleep(60.0)
+        return response
 
 
     def save(self, dir_path: Path) -> None:

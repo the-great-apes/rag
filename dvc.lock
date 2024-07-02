@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   parse:
-    cmd: python -m src.parse
+    cmd: python3 -m src.parse
     deps:
     - path: data/raw/
       hash: md5
@@ -23,7 +23,7 @@ stages:
       size: 8361445
       nfiles: 15
   clean:
-    cmd: python -m src.clean
+    cmd: python3 -m src.clean
     deps:
     - path: data/parsed/
       hash: md5
@@ -45,7 +45,7 @@ stages:
       size: 7860116
       nfiles: 15
   chunk:
-    cmd: python -m src.chunk
+    cmd: python3 -m src.chunk
     deps:
     - path: data/clean/
       hash: md5
@@ -54,8 +54,8 @@ stages:
       nfiles: 15
     - path: src/chunk.py
       hash: md5
-      md5: be0e8eded6fee8f56ac3c6738eaad349
-      size: 2286
+      md5: 607158661a82b3b5739df10adce28b85
+      size: 2698
     params:
       params.yaml:
         data.chunk: data/chunk/
@@ -63,21 +63,21 @@ stages:
     outs:
     - path: data/chunk/
       hash: md5
-      md5: be6d3a5bbfee6a935271e0fb4f5957c4.dir
+      md5: 19653241c58ecef9732ebd7f09ac4b04.dir
       size: 15771211
       nfiles: 15
   index:
-    cmd: python -m src.index
+    cmd: python3 -m src.index
     deps:
     - path: data/chunk/
       hash: md5
-      md5: be6d3a5bbfee6a935271e0fb4f5957c4.dir
+      md5: 19653241c58ecef9732ebd7f09ac4b04.dir
       size: 15771211
       nfiles: 15
     - path: src/chunk.py
       hash: md5
-      md5: be0e8eded6fee8f56ac3c6738eaad349
-      size: 2286
+      md5: 607158661a82b3b5739df10adce28b85
+      size: 2698
     params:
       params.yaml:
         data.chunk: data/chunk/
@@ -85,8 +85,8 @@ stages:
     outs:
     - path: data/index/
       hash: md5
-      md5: 6d7f931c1f3ab92a44dae11056667ba7.dir
-      size: 244632142
+      md5: e873f651716a50d09cbe48a63762d7d3.dir
+      size: 69451262
       nfiles: 75
   exrtact:
     cmd: python -m src.extract

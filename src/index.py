@@ -14,14 +14,13 @@ from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.llms.groq import Groq
 
 from .helpers import Report, list_json_files
+from .local_models.phi3 import Phi3
 
 ########################################################################################
 # main
 ########################################################################################
 
-cfg = yaml.safe_load(open("/app/params.yaml"))
-use_openai = cfg["use_openai"]
-print(f"use_openai: {use_openai}")
+cfg = yaml.safe_load(open("params.yaml"))
 
 def main():
     cfg = yaml.safe_load(open("params.yaml"))
@@ -29,14 +28,18 @@ def main():
     path_o = Path(cfg["data"]["index"])
 
     # model
-    if use_openai:
+    if cfg['model_to_use'] == "openai":
         embed_model = AzureOpenAIEmbedding(**cfg["models"]["embed_openai"])
         llm = AzureOpenAI(**cfg["models"]["openai"])
-    else:
+    elif cfg['model_to_use'] == "groq":
         embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_local"]["model"],
                                            device=os.environ.get("EMBEDDING_DEVICE"))
         llm = Groq(model=cfg["models"]["groq"]['deployment_name'],
                    api_key=os.environ.get("GROQ_API_KEY"))
+    else:
+        embed_model = HuggingFaceEmbedding(model_name=cfg["models"]["embed_local"]["model"],
+                                           device=os.environ.get("EMBEDDING_DEVICE"))
+        llm =  Phi3(cfg["models"]["hf_phi3"]['model']).get_llm()
 
     # settings
     Settings.llm = llm
